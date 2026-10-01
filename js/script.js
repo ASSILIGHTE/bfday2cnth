@@ -147,8 +147,9 @@ document.addEventListener('DOMContentLoaded', () => {
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
 
-  // Right Nav Capsule Active Section Highlight
-  const navItems = document.querySelectorAll('.right-nav-capsule .nav-item');
+  // Floating Nav Capsule Active Section Highlight
+  const navItems = document.querySelectorAll('.f1-floating-nav .nav-item');
+  const navContainer = document.querySelector('.f1-floating-nav');
   const sections = document.querySelectorAll('.section');
 
   sections.forEach((sec) => {
@@ -161,6 +162,9 @@ document.addEventListener('DOMContentLoaded', () => {
           navItems.forEach((item) => {
             if (item.getAttribute('href') === `#${sec.id}`) {
               item.classList.add('active');
+              if (navContainer && window.innerWidth <= 768) {
+                item.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+              }
             } else {
               item.classList.remove('active');
             }
@@ -362,6 +366,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const sealRect = waxSealEl.getBoundingClientRect();
 
+    const isMobile = window.innerWidth <= 480;
+    const letterPopY = isMobile ? -95 : -130;
+    const letterScale = isMobile ? 1.05 : 1.15;
+
     const tl = gsap.timeline();
 
     tl.to(waxSealEl, {
@@ -380,9 +388,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (this.progress() > 0.5) envelopeFlapEl.classList.add('behind');
       }
     })
-    .to(envelopeLetterEl, { y: -130, duration: 0.6, ease: 'back.out(1.3)' })
+    .to(envelopeLetterEl, { y: letterPopY, duration: 0.6, ease: 'back.out(1.3)' })
     .set(envelopeLetterEl, { zIndex: 20 })
-    .to(envelopeLetterEl, { y: -20, scale: 1.15, duration: 0.5 })
+    .to(envelopeLetterEl, { y: -15, scale: letterScale, duration: 0.5 })
     .add(() => {
       soundFX.playSparkleChime();
       lenis.scrollTo('#section-2', { duration: 1.5 });
